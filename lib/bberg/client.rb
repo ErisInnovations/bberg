@@ -12,8 +12,8 @@ module Bberg
     # @param [Fixnum] port port to connect to
     def initialize(host = "localhost", port = 8194)
       @session_options = Bberg::Native::SessionOptions.new
-      @session_options.setServerHost("localhost")
-      @session_options.setServerPort(8194)
+      @session_options.setServerHost(host)
+      @session_options.setServerPort(port)
     end
 
     # Perform a historical data request
