@@ -6,6 +6,7 @@ gem 'activesupport'
 gem 'i18n'
 gem 'tzinfo'
 gem 'rake',       '~> 0.8.7'
+gem 'yaml'
 
 group :development do
   gem 'ore-core',   '~> 0.1.0'

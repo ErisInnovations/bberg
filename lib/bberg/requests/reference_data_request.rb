@@ -13,7 +13,8 @@ module Bberg
       DEFAULT_OPTIONS = Hash[
         :fields => ["PX_SETTLE"],
         :useUTCTime => true,
-        :returnEids => false
+        :returnEids => false,
+        :overrides => [],
       ]
 
       # Create new instance
