@@ -109,6 +109,10 @@ module Bberg
             element.getElementAsFloat64(field).to_f
           when Bberg::Native::Schema::Datatype::Constants::STRING
             element.getElementAsString(field).to_s
+          when Bberg::Native::Schema::Datatype::Constants::DATE
+            convert_to_rb_date(element.getValueAsDate())
+          when Bberg::Native::Schema::Datatype::Constants::DATETIME
+            convert_to_rb_time(element.getValueAsDatetime())
           else
             raise Bberg::BbergException.new("Unsupported data type in response: #{data_type.to_s}")
           end

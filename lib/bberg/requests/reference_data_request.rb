@@ -136,6 +136,8 @@ module Bberg
           convert_to_rb_date(element.getValueAsDate())
         when Bberg::Native::Schema::Datatype::Constants::STRING
           element.getValueAsString().to_s
+        when Bberg::Native::Schema::Datatype::Constants::DATETIME
+          convert_to_rb_time(element.getValueAsDatetime())
         else
           raise Bberg::BbergException.new(
             "Unsupported data type in response: #{element.datatype.to_s}")
