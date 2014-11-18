@@ -107,6 +107,8 @@ module Bberg
             element.getElementAsFloat32(field).to_f
           when  Bberg::Native::Schema::Datatype::Constants::FLOAT64
             element.getElementAsFloat64(field).to_f
+          when Bberg::Native::Schema::Datatype::Constants::STRING
+            element.getElementAsString(field).to_s
           else
             raise Bberg::BbergException.new("Unsupported data type in response: #{data_type.to_s}")
           end

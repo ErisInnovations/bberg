@@ -134,6 +134,8 @@ module Bberg
           element.getValueAsFloat64().to_f
         when Bberg::Native::Schema::Datatype::Constants::DATE
           convert_to_rb_date(element.getValueAsDate())
+        when Bberg::Native::Schema::Datatype::Constants::STRING
+          element.getValueAsString().to_s
         else
           raise Bberg::BbergException.new(
             "Unsupported data type in response: #{element.datatype.to_s}")
