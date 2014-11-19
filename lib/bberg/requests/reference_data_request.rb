@@ -19,11 +19,11 @@ module Bberg
 
       # Create new instance
       #
-      # @param [Bberg::Native::SessionOptions] session_options to specify how to connect session
+      # @param [Bberg::Native::Session] session a previously opened session
       # @param [#each|String] identifiers a list of identifiers for this request
       # @param [Hash] options_arg specification of what fields or other parameters to use for the request
-      def initialize(session_options, identifiers, options_arg = {})
-        @session_options = session_options
+      def initialize(session, identifiers, options_arg = {})
+        @session = session
 
         @identifiers = unless identifiers.respond_to? 'each'
           [identifiers]

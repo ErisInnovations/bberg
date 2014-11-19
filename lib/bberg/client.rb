@@ -14,6 +14,17 @@ module Bberg
       @session_options = Bberg::Native::SessionOptions.new
       @session_options.setServerHost(host)
       @session_options.setServerPort(port)
+      @mutex = Mutex.new
+    end
+
+    # Stop an existing session.  Call this before destroying the Client.
+    def stop
+      @mutex.synchronize do
+        if @session
+          @session.stop
+          @session = nil
+        end
+      end
     end
 
     # Perform a historical data request
@@ -23,8 +34,8 @@ module Bberg
     # @param [Hash] options_arg specification of what fields or other parameters to use for the request
     # @return [Hash] result in Hash format
     def historical_data_request(identifiers, start_time, end_time, options = {})
-      request = Bberg::Requests::HistoricalDataRequest.new(@session_options, identifiers, start_time, end_time, options)
-      request.perform_request
+      request = Bberg::Requests::HistoricalDataRequest.new(session, identifiers, start_time, end_time, options)
+      request.perform_request next_request_id
     end
 
     # Perform a reference data request
@@ -32,8 +43,8 @@ module Bberg
     # @param [Hash] options_arg specification of what fields or other parameters to use for the request
     # @return [Hash] result in Hash format
     def reference_data_request(identifiers, options)
-      request = Bberg::Requests::ReferenceDataRequest.new(@session_options, identifiers, options)
-      request.perform_request
+      request = Bberg::Requests::ReferenceDataRequest.new(session, identifiers, options)
+      request.perform_request next_request_id
     end
     
     # Perform a reference data request for holiday calendar data
@@ -59,6 +70,20 @@ module Bberg
     ################## PRIVATE #######################
 
     private
-    
+    def session
+      @mutex.synchronize do
+        @session ||= Bberg::Native::Session.new(@session_options).tap do |session|
+          raise Bberg::BbergException.new("Could not start session!") unless session.start()
+        end
+      end
+    end
+
+    def next_request_id
+      @mutex.synchronize do
+        @request_id ||= 0
+        @request_id += 1
+        @request_id
+      end
+    end
   end
 end

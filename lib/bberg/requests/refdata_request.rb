@@ -17,8 +17,8 @@ module Bberg
       # Blocks while waiting for the response.
       #
       # @return [Hash] A parsed response in the form of a Hash
-      def perform_request
-        @session, @svc, @req_id = create_ref_data_service()
+      def perform_request id
+        @svc, @req_id = create_ref_data_service(id)
         
         create_request
         
@@ -26,9 +26,6 @@ module Bberg
   
         response = retrieve_response
       
-        @session.stop()
-        @session = nil
-        
         response
       end
 
@@ -69,26 +66,21 @@ module Bberg
       
       # Create a reference data service
       #
-      # This both creates and starts a session, and opens a refdata service.
+      # Given an existing session, this opens a refdata service.
       #
       # @return [Bberg::Native::Session, Object, Fixnum] session, service and request ID
-      def create_ref_data_service
-        session = Bberg::Native::Session.new(@session_options)
-        raise Bberg::BbergException.new("Could not start session!") unless session.start()
-        raise Bberg::BbergException.new("Could not open service!") unless session.openService("//blp/refdata")
-        request_id = get_correlation_id()
-        ref_data_service = session.getService("//blp/refdata")
-        [session, ref_data_service, request_id]
+      def create_ref_data_service id
+        raise Bberg::BbergException.new("Could not open service!") unless @session.openService("//blp/refdata")
+        request_id = get_correlation_id(id)
+        ref_data_service = @session.getService("//blp/refdata")
+        [ref_data_service, request_id]
       end
       
       # Get correlation ID
       #
-      # NOTE: this needs to be updated so we have increasing unique IDs here.
-      #
       # @return [Fixnum] correlation ID
-      def get_correlation_id
-        # TODO: we need a mutex protected instance variable of increasing ID's to pass in here
-        Bberg::Native::CorrelationID.new(1)
+      def get_correlation_id id
+        Bberg::Native::CorrelationID.new(id)
       end
       
       # Utility method to merge and concatenate two Hashes
