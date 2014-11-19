@@ -138,6 +138,8 @@ module Bberg
           element.getValueAsString().to_s
         when Bberg::Native::Schema::Datatype::Constants::DATETIME
           convert_to_rb_time(element.getValueAsDatetime())
+        when Bberg::Native::Schema::Datatype::Constants::SEQUENCE
+          get_element_values(element)
         else
           raise Bberg::BbergException.new(
             "Unsupported data type in response: #{element.datatype.to_s}")
