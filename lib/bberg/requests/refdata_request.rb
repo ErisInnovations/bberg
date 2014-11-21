@@ -27,6 +27,9 @@ module Bberg
         response = retrieve_response
       
         response
+
+      rescue java.lang.IllegalStateException => e
+        raise Bberg::BbergSessionStopped.new(e.message)
       end
 
       # Retrieve response for this request
@@ -53,6 +56,9 @@ module Bberg
             print_response_event(event) if $DEBUG
             event_result = parse_response(event)
             result = hash_merge_concat(result, event_result)
+          when Bberg::Native::Event::EventType::Constants::SESSION_STATUS
+            print_other_event(event) if $DEBUG
+            handle_session_status_event(event)
           else
             print_other_event(event) if $DEBUG
           end
@@ -147,14 +153,18 @@ module Bberg
           puts "correlationID=" + message.correlationID().to_s
           puts "messageType =" + message.messageType().toString()
           puts message.toString()
-          if Bberg::Native::Event::EventType::Constants::SESSION_STATUS == event.eventType().intValue() and
-            "SessionStopped" == message.messageType().toString()
-            puts "Terminating: " + message.messageType()
-            exit
-          end
         end
       end
       
+      def handle_session_status_event(event)
+        iter = event.messageIterator()
+        while iter.hasNext()
+          message = iter.next()
+          if "SessionStopped" == message.messageType().toString()
+            raise Bberg::BbergSessionStopped.new('Session Stopped')
+          end
+        end
+      end
     end
   end
 end
