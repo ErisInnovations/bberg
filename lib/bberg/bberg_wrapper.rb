@@ -9,7 +9,7 @@ module Bberg
   # @return [String] path to jar
   def self.jar_path
     # load either from BBERG_JAVA_HOME or the default location
-    base_path = ENV['BBERG_JAVA_HOME'].nil? ? 'C:/blp/API/blpapi_java_3.6.1.0/bin' : ENV['BBERG_JAVA_HOME']
+    base_path = ENV['BBERG_JAVA_HOME'] || File.join(File.dirname(__FILE__), '../java')
     File.join(base_path, 'blpapi-3.6.1-0.jar')
   end
 
