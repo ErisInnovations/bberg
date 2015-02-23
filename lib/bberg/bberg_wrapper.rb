@@ -2,10 +2,11 @@ require 'java'
 
 module Bberg
 
-  # path to where the bloomberg java API jar can be found
+  # Path to where the bloomberg java API jar can be found.
   #
-  # either uses the path in the env variable BBERG_JAVA_HOME
-  #  or defaults to 'C:/blp/API/blpapi_java_3.6.1.0/bin'
+  # Defaults defaults to the relative java directory path,
+  # can be overidden via the env variable BBERG_JAVA_HOME
+  #
   # @return [String] path to jar
   def self.jar_path
     # load either from BBERG_JAVA_HOME or the default location
