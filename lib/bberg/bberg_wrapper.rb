@@ -11,7 +11,7 @@ module Bberg
   def self.jar_path
     # load either from BBERG_JAVA_HOME or the default location
     base_path = ENV['BBERG_JAVA_HOME'] || File.join(File.dirname(__FILE__), '../java')
-    File.join(base_path, 'blpapi-3.6.1-0.jar')
+    File.join(base_path, 'blpapi-3.19.1-1.jar')
   end
 
   # Module to hold references to the native java API classes in a ruby friendly way.
